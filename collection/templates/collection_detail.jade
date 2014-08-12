@@ -1,8 +1,10 @@
-!!! 5
-html(lang="en")
-  head
-    title Collection Detail
-  body
-    h2= object.name
-    p= object.description
-    p= object.created_at|date
+extends base
+
+block title
+  = block.super
+  | 详情
+  = object.pk
+block content
+  h2= object.name
+  p= object.description
+  p= object.created_at|date

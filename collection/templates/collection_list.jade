@@ -1,9 +1,10 @@
-!!! 5
-html(lang="en")
-  head
-    title Collection List
-  body
-    ul
-      each collection in object_list
-        li
-          a(href!={% url 'collection_detail' pk=collection.pk %})= collection.name
+extends base
+
+block title
+  = block.super
+  | Collection List
+block content
+  ul
+    - for collection in object_list
+      li
+        a(href!={% url 'collection_detail' pk=collection.pk %})= collection.name
