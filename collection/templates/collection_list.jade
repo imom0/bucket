@@ -4,6 +4,7 @@ block title
   = block.super
   | Collection List
 block content
+  a(href!={% url 'collection_create' %}) 创建
   ul
     - for collection in object_list
       li
