@@ -10,5 +10,37 @@ block content
   p= object.description
   p= object.created_at|date
 
-  - for form in request_form_set
-    != form
+  div.ui.fluid.form.segment
+    h3.ui.header
+      请求
+    div.field
+      label
+        基址:
+      input(maxlength=200, name="base_url", type="text")
+    div.field
+      label
+        HTTP方法:
+      div.grouped.inline.fields
+        - var methods = ('GET', 'POST', 'HEAD')
+        - for method in methods
+          div.field
+            div.ui.radio.checkbox
+              - if forloop.first
+                input(type="radio", name="method", value!={{ method }}, id!=method-{{ method }}, checked)
+              - else
+                input(type="radio", name="method", value!={{ method }}, id!=method-{{ method }}, )
+              label(for!=method-{{ method }})= method
+    div.field
+      label
+        HTTP头:
+      textarea(name="headers")
+    div.field
+      label
+        Query Params:
+      textarea(name="query_params")
+    div.field
+      label
+        | Body:
+      textarea(name="body")
+block javascript
+  script

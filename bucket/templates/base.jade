@@ -1,8 +1,10 @@
 - load staticfiles
 !!! 5
-html(lang="en")
+html(ng-app="app", lang="en")
   head
-    link(href!={% static 'css/semantic.min.css' %}, rel='stylesheet', type='text/css')
+    link(href!={% static 'semantic-ui/css/semantic.min.css' %}, rel='stylesheet', type='text/css')
+    script(src!={% static 'jquery.min.js' %})
+    script(src!={% static 'angular.min.js' %})
     title
       block title
         | Bucket - 
@@ -28,3 +30,5 @@ html(lang="en")
           | Bucket
     div.main.container
       block content
+
+  block javascript
