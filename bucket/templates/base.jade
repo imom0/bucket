@@ -1,8 +1,30 @@
+- load staticfiles
 !!! 5
 html(lang="en")
   head
+    link(href!={% static 'css/semantic.min.css' %}, rel='stylesheet', type='text/css')
     title
       block title
         | Bucket - 
+    style(type='text/css')
+      body {
+        font-family: Helvetica, Sans-Serif;
+        margin: 0px;
+        padding: 0px;
+        color: #555555;
+        min-width: 320px;
+      }
+      .container {
+        width: 1100px;
+        margin: 0px auto;
+      }
+      .main {
+        padding-top: 50px;
+      }
   body
-    block content
+    div.ui.fixed.transparent.inverted.menu
+      div.container
+        div.item
+          | Bucket
+    div.main.container
+      block content
