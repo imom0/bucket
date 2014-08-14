@@ -10,13 +10,15 @@ block content
   p= object.description
   p= object.created_at|date
 
-  div.ui.fluid.form.segment
+  div(ng-controller="CollectionController").ui.fluid.form.segment
     h3.ui.header
       请求
+      - verbatim
+        {{ location.protocol }}//{{ location.host }}{{ location.pathname }}{{ location.search }}
     div.field
       label
-        基址:
-      input(maxlength=200, name="base_url", type="text")
+        地址:
+      input(ng-model="base_url", maxlength=200, name="base_url", type="text")
     div.field
       label
         HTTP方法:
@@ -37,10 +39,35 @@ block content
     div.field
       label
         Query Params:
-      textarea(name="query_params")
+      div(ng-repeat="param in query").two.fields
+          div.field
+            input(ng-model="param.name", type="text")
+          div.field
+            input(ng-model="param.value", type="text")
+      button(ng-click="add()") +
     div.field
       label
         | Body:
       textarea(name="body")
 block javascript
   script
+    function CollectionController($scope) {
+      $scope.location = document.createElement('a');
+      $scope.base_url = window.location;
+      $scope.query = [];
+
+      $scope.add = function() {
+        $scope.query.push({'name': '', 'value': ''});
+      }
+
+      $scope.$watch(
+        function() {
+          return $scope.base_url + JSON.stringify($scope.query);
+        }, function () {
+            var validParams = $scope.query.filter(function(i) {
+              return !!i.name;
+            });
+            $scope.location.href = $scope.base_url;
+            $scope.location.search = $.param(validParams);
+        });
+    }
