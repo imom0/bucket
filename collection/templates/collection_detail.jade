@@ -28,9 +28,9 @@ block content
           div.field
             div.ui.radio.checkbox
               - if forloop.first
-                input(type="radio", name="method", value!={{ method }}, id!=method-{{ method }}, checked)
+                input(type="radio", name="method", ng-model="method", value!={{ method }}, id!=method-{{ method }}, checked)
               - else
-                input(type="radio", name="method", value!={{ method }}, id!=method-{{ method }}, )
+                input(type="radio", name="method", ng-model="method", value!={{ method }}, id!=method-{{ method }}, )
               label(for!=method-{{ method }})= method
     div.field
       label
@@ -45,7 +45,7 @@ block content
           div.field
             input(ng-model="param.value", type="text")
       button(ng-click="add()") +
-    div.field
+    div.field(ng-show="method == 'POST'")
       label
         | Body:
       textarea(name="body")
