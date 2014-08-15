@@ -35,7 +35,12 @@ block content
     div.field
       label
         HTTP头:
-      textarea(name="headers")
+      div(ng-repeat="param in headers").two.fields
+          div.field
+            input(ng-model="param.name", type="text")
+          div.field
+            input(ng-model="param.value", type="text")
+      button(ng-click="add_header()") +
     div.field
       label
         Query Params:
@@ -44,7 +49,7 @@ block content
             input(ng-model="param.name", type="text")
           div.field
             input(ng-model="param.value", type="text")
-      button(ng-click="add()") +
+      button(ng-click="add_query()") +
     div.field(ng-show="method == 'POST'")
       label
         | Body:
@@ -55,9 +60,14 @@ block javascript
       $scope.location = document.createElement('a');
       $scope.base_url = window.location;
       $scope.query = [];
+      $scope.headers = [];
 
-      $scope.add = function() {
+      $scope.add_query = function() {
         $scope.query.push({'name': '', 'value': ''});
+      }
+
+      $scope.add_header = function() {
+        $scope.headers.push({'name': '', 'value': ''});
       }
 
       $scope.$watch(
