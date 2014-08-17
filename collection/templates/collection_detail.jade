@@ -35,21 +35,29 @@ block content
     div.field
       label
         HTTP头:
-      div(ng-repeat="param in headers").two.fields
+      div(ng-repeat="param in headers").three.fields
           div.field
             input(ng-model="param.name", type="text")
           div.field
             input(ng-model="param.value", type="text")
-      button(ng-click="add_header()") +
+          div.field
+            div.ui.red.icon.button
+              i.icon.remove(ng-click="removeHeader($index)")
+      div.ui.blue.icon.button
+        i.icon.add(ng-click="addHeader()")
     div.field
       label
         Query Params:
-      div(ng-repeat="param in query").two.fields
+      div(ng-repeat="param in query").three.fields
           div.field
             input(ng-model="param.name", type="text")
           div.field
             input(ng-model="param.value", type="text")
-      button(ng-click="add_query()") +
+          div.field
+            div.ui.red.icon.button
+              i.icon.remove(ng-click="removeQuery($index)")
+      div.ui.blue.icon.button
+        i.icon.add(ng-click="addQuery()")
     div.field(ng-show="method == 'POST'")
       label
         | Body:
@@ -59,15 +67,23 @@ block javascript
     function CollectionController($scope) {
       $scope.location = document.createElement('a');
       $scope.base_url = window.location;
-      $scope.query = [];
-      $scope.headers = [];
+      $scope.query = [{'name': '', 'value': ''}];
+      $scope.headers = [{'name': '', 'value': ''}];
 
-      $scope.add_query = function() {
+      $scope.addHeader = function() {
+        $scope.headers.push({'name': '', 'value': ''});
+      }
+
+      $scope.addQuery = function() {
         $scope.query.push({'name': '', 'value': ''});
       }
 
-      $scope.add_header = function() {
-        $scope.headers.push({'name': '', 'value': ''});
+      $scope.removeHeader = function(index) {
+        $scope.headers.splice(index, 1);
+      }
+
+      $scope.removeQuery = function(index) {
+        $scope.query.splice(index, 1);
       }
 
       $scope.$watch(
