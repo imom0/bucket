@@ -42,9 +42,9 @@ block content
             input(ng-model="param.value", type="text")
           div.field
             div.ui.red.icon.button
-              i.icon.remove(ng-click="removeHeader($index)")
+              i.icon.remove(ng-click="remove(headers, $index)")
       div.ui.blue.icon.button
-        i.icon.add(ng-click="addHeader()")
+        i.icon.add(ng-click="add(headers)")
     div.field
       label
         Query Params:
@@ -55,9 +55,9 @@ block content
             input(ng-model="param.value", type="text")
           div.field
             div.ui.red.icon.button
-              i.icon.remove(ng-click="removeQuery($index)")
+              i.icon.remove(ng-click="remove(query, $index)")
       div.ui.blue.icon.button
-        i.icon.add(ng-click="addQuery()")
+        i.icon.add(ng-click="add(query)")
     div.field(ng-show="method == 'POST'")
       label
         | Body:
@@ -70,20 +70,12 @@ block javascript
       $scope.query = [{'name': '', 'value': ''}];
       $scope.headers = [{'name': '', 'value': ''}];
 
-      $scope.addHeader = function() {
-        $scope.headers.push({'name': '', 'value': ''});
+      $scope.add = function(list) {
+        list.push({'name': '', 'value': ''});
       }
 
-      $scope.addQuery = function() {
-        $scope.query.push({'name': '', 'value': ''});
-      }
-
-      $scope.removeHeader = function(index) {
-        $scope.headers.splice(index, 1);
-      }
-
-      $scope.removeQuery = function(index) {
-        $scope.query.splice(index, 1);
+      $scope.remove = function(list, index) {
+        list.splice(index, 1);
       }
 
       $scope.$watch(
