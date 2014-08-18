@@ -10,7 +10,9 @@ from .constants import METHODS
 class Request(models.Model):
     collection = models.ForeignKey('collection.Collection',
                                    verbose_name=u'测试集')
-    base_url = models.CharField(u'基址', max_length=200)
+    protocol = models.CharField(u'协议', max_length=10)
+    host = models.CharField(u'host', max_length=200)
+    path = models.CharField(u'endpoint', max_length=8192)
     method = models.CharField(u'HTTP方法', max_length=10, choices=METHODS)
     headers = models.TextField(u'HTTP头', blank=True)
     query_params = models.TextField(u'Query Params', blank=True)
