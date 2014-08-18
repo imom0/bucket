@@ -26,7 +26,7 @@ block content
         div.field
           div.ui.radio.checkbox
             - verbatim
-              <input type="radio" id="{{ idForMethod(method) }}" name="method" ng-model="method.selected">
+              <input type="radio" id="{{ idForMethod(method) }}" name="method" ng-model="methods.selected" ng-value="method">
               <label for="{{ idForMethod(method) }}">{{ method }}</label>
     div.field
       label
@@ -54,39 +54,68 @@ block content
               i.icon.remove
       div.ui.blue.icon.button(ng-click="add(query)")
         i.icon.add
-    div.field(ng-show="method == 'POST'")
+    div.field(ng-show="methods.selected == 'POST'")
       label
         | Body:
       textarea(name="body")
+    div.ui.divider
+    div.center.aligned.column
+      div.right.floated.green.ui.labeled.icon.button(ng-click="updateRequests()")
+        i.save.icon
+        | 保存
 block javascript
   script
-    function CollectionController($scope) {
-      $scope.location = document.createElement('a');
-      $scope.base_url = window.location;
-      $scope.query = [{'name': '', 'value': ''}];
-      $scope.headers = [{'name': '', 'value': ''}];
-      $scope.methods = ['GET', 'POST', 'PUT'];
+    angular.module('myApp', []).controller('CollectionController',
+      ['$scope', '$http', function($scope, $http) {
+        $scope.location = document.createElement('a');
+        $scope.base_url = window.location;
+        $scope.query = [{'name': '', 'value': ''}];
+        $scope.headers = [{'name': '', 'value': ''}];
+        $scope.methods = ['GET', 'POST', 'PUT'];
+        $scope.methods.selected = 'GET';
 
-      $scope.add = function(list) {
-        list.push({'name': '', 'value': ''});
+        $scope.add = function(list) {
+          list.push({'name': '', 'value': ''});
+        }
+
+        $scope.remove = function(list, index) {
+          list.splice(index, 1);
+        }
+
+        $scope.idForMethod = function(method) {
+          return 'method-' + method;
+        }
+
+        $scope.$watch(
+          function() {
+            return $scope.base_url + JSON.stringify($scope.query);
+          }, function () {
+              var validParams = $scope.query.filter(function(i) {
+                return !!i.name;
+              });
+              $scope.location.href = $scope.base_url;
+              $scope.location.search = $.param(validParams);
+          });
+        var fetchRequests = function() {
+          $http({method: 'GET', url: "{% url 'collection_requests' object.id %}"})
+          .success(function(data, status, headers, config) {
+            alert('success');
+          })
+          .error(function(data, status, headers, config) {
+            alert('fail');
+          })
+        }
+
+        $scope.updateRequests = function() {
+          $http({method: 'POST', url: "{% url 'collection_requests' object.id %}"})
+          .success(function(data, status, headers, config) {
+            alert('update success');
+          })
+          .error(function(data, status, headers, config) {
+            alert('update fail');
+          })
+        }
+
+        fetchRequests();
       }
-
-      $scope.remove = function(list, index) {
-        list.splice(index, 1);
-      }
-
-      $scope.idForMethod = function(method) {
-        return 'method-' + method;
-      }
-
-      $scope.$watch(
-        function() {
-          return $scope.base_url + JSON.stringify($scope.query);
-        }, function () {
-            var validParams = $scope.query.filter(function(i) {
-              return !!i.name;
-            });
-            $scope.location.href = $scope.base_url;
-            $scope.location.search = $.param(validParams);
-        });
-    }
+    ]);

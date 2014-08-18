@@ -13,7 +13,7 @@ class RequestForm(ModelForm):
 
     class Meta:
         model = Request
-        fields = ('base_url', 'method', 'headers',
-                  'query_params', 'body')
+        fields = ('protocol', 'host', 'path',
+                  'method', 'headers', 'query_params', 'body')
 
 RequestFormSet = modelformset_factory(Request, form=RequestForm)

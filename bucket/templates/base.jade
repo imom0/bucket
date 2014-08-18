@@ -1,6 +1,6 @@
 - load staticfiles
 !!! 5
-html(ng-app, lang="en")
+html(ng-app="myApp", lang="en")
   head
     link(href!={% static 'semantic-ui/css/semantic.min.css' %}, rel='stylesheet', type='text/css')
     script(src!={% static 'angular.min.js' %})

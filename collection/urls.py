@@ -14,6 +14,6 @@ urlpatterns = patterns(
         name='collection_create'),
     url(r'^(?P<pk>\d+)/$', CollectionDetailView.as_view(),
         name='collection_detail'),
-    url(r'^(?P<pk>\d+)/edit/$', 'update_collection',
-        name='collection_update'),
+    url(r'^(?P<pk>\d+)/requests/$', 'collection_requests',
+        name='collection_requests'),
 )
