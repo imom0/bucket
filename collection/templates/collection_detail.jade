@@ -22,16 +22,12 @@ block content
     div.field
       label
         HTTP方法:
-      div.grouped.inline.fields
-        - var methods = ('GET', 'POST', 'HEAD')
-        - for method in methods
-          div.field
-            div.ui.radio.checkbox
-              - if forloop.first
-                input(type="radio", name="method", ng-model="method", value!={{ method }}, id!=method-{{ method }}, checked)
-              - else
-                input(type="radio", name="method", ng-model="method", value!={{ method }}, id!=method-{{ method }}, )
-              label(for!=method-{{ method }})= method
+      div.grouped.inline.fields(ng-repeat="method in methods")
+        div.field
+          div.ui.radio.checkbox
+            - verbatim
+              <input type="radio" id="{{ idForMethod(method) }}" name="method" ng-model="method.selected">
+              <label for="{{ idForMethod(method) }}">{{ method }}</label>
     div.field
       label
         HTTP头:
@@ -69,6 +65,7 @@ block javascript
       $scope.base_url = window.location;
       $scope.query = [{'name': '', 'value': ''}];
       $scope.headers = [{'name': '', 'value': ''}];
+      $scope.methods = ['GET', 'POST', 'PUT'];
 
       $scope.add = function(list) {
         list.push({'name': '', 'value': ''});
@@ -76,6 +73,10 @@ block javascript
 
       $scope.remove = function(list, index) {
         list.splice(index, 1);
+      }
+
+      $scope.idForMethod = function(method) {
+        return 'method-' + method;
       }
 
       $scope.$watch(
