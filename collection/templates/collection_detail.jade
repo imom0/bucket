@@ -65,8 +65,9 @@ block content
         | 保存
 block javascript
   script
-    angular.module('myApp', []).controller('CollectionController',
-      ['$scope', '$http', function($scope, $http) {
+    angular.module('myApp', ['ngCookies']).controller('CollectionController',
+      ['$scope', '$http', '$cookies', function($scope, $http, $cookies) {
+        $http.defaults.headers.post['X-CSRFToken'] = $cookies.csrftoken;
         $scope.location = document.createElement('a');
         $scope.base_url = window.location;
         $scope.query = [{'name': '', 'value': ''}];
