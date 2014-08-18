@@ -37,10 +37,10 @@ block content
           div.field
             input(ng-model="param.value", type="text")
           div.field
-            div.ui.red.icon.button
-              i.icon.remove(ng-click="remove(headers, $index)")
-      div.ui.blue.icon.button
-        i.icon.add(ng-click="add(headers)")
+            div.ui.red.icon.button(ng-click="remove(headers, $index)")
+              i.icon.remove
+      div.ui.blue.icon.button(ng-click="add(headers)")
+        i.icon.add
     div.field
       label
         Query Params:
@@ -50,10 +50,10 @@ block content
           div.field
             input(ng-model="param.value", type="text")
           div.field
-            div.ui.red.icon.button
-              i.icon.remove(ng-click="remove(query, $index)")
-      div.ui.blue.icon.button
-        i.icon.add(ng-click="add(query)")
+            div.ui.red.icon.button(ng-click="remove(query, $index)")
+              i.icon.remove
+      div.ui.blue.icon.button(ng-click="add(query)")
+        i.icon.add
     div.field(ng-show="method == 'POST'")
       label
         | Body:
