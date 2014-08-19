@@ -10,7 +10,7 @@ from django.views.decorators.http import require_http_methods
 from django.views.generic import (ListView, DetailView,
                                   CreateView)
 
-from request.forms import RequestFormSet
+from request.forms import RequestForm
 from .models import Collection
 from .forms import CollectionForm
 

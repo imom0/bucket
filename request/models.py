@@ -19,3 +19,18 @@ class Request(models.Model):
     body = models.TextField(u'Body', blank=True)
     created_at = models.DateTimeField(u'创建时间', auto_now_add=True)
     updated_at = models.DateTimeField(u'更新时间', auto_now=True)
+
+    def __unicode__(self):
+        return u'{method} {protocol}://{host}{path}'.format(**self.__dict__)
+
+    def as_dict(self):
+        return {
+            'pk': self.pk,
+            'protocol': self.protocol,
+            'host': self.host,
+            'path': self.path,
+            'method': self.method,
+            'headers': self.headers,
+            'query_params': self.query_params,
+            'body': self.body,
+        }
