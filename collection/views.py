@@ -42,7 +42,15 @@ class CollectionCreateView(CreateView):
 
 @require_http_methods(['GET', 'POST'])
 def collection_requests(request, pk):
+    try:
+        collection = Collection.objects.get(pk=pk)
+        requests = collection.request_set.all()
+    except Collection.DoesNotExist:
+        requests = []
     data = {
-        'status': 'OK'
+        'meta': {
+            'status': 'OK'
+        },
+        'data': [req.as_dict() for req in requests]
     }
     return HttpResponse(content=json.dumps(data), status=200)
