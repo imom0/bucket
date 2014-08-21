@@ -100,7 +100,9 @@ block javascript
         var fetchRequests = function() {
           $http({method: 'GET', url: "{% url 'collection_requests' object.id %}"})
           .success(function(data, status, headers, config) {
-            alert('success');
+            if (data.meta.status == 'OK') {
+              angular.extend($scope, data.data);
+            }
           })
           .error(function(data, status, headers, config) {
             alert('fail');
