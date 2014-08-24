@@ -74,6 +74,7 @@ block javascript
         $scope.headers = [{'name': '', 'value': ''}];
         $scope.methods = ['GET', 'POST', 'PUT'];
         $scope.methods.selected = 'GET';
+        $scope.requests = [];
 
         $scope.add = function(list) {
           list.push({'name': '', 'value': ''});
@@ -101,7 +102,7 @@ block javascript
           $http({method: 'GET', url: "{% url 'collection_requests' object.id %}"})
           .success(function(data, status, headers, config) {
             if (data.meta.status == 'OK') {
-              angular.extend($scope, data.data);
+              $scope.requests = data.data;
             }
           })
           .error(function(data, status, headers, config) {
