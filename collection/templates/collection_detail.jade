@@ -102,7 +102,14 @@ block javascript
           $http({method: 'GET', url: "{% url 'collection_requests' object.id %}"})
           .success(function(data, status, headers, config) {
             if (data.meta.status == 'OK') {
-              $scope.requests = data.data;
+              for (var i=0; i<data.data.length; i++) {
+                var uri = data.data[i].uri,
+                    location = document.createElement('a');
+                location.href = uri;
+                $scope.requests.push({
+                  'location': location
+                })
+              }
             }
           })
           .error(function(data, status, headers, config) {
