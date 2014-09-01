@@ -10,15 +10,15 @@ block content
   p= object.description
   p= object.created_at|date
 
-  div(ng-controller="CollectionController").ui.fluid.form.segment
+  div(ng-controller="CollectionController", ng-repeat="req in requests").ui.fluid.form.segment
     h3.ui.header
       请求
       - verbatim
-        {{ location.protocol }}//{{ location.host }}{{ location.pathname }}{{ location.search }}
+        {{ req.url.protocol }}//{{ req.url.host }}{{ req.url.pathname }}{{ req.url.search }}
     div.field
       label
         地址:
-      input(ng-model="base_url", maxlength=200, name="base_url", type="text")
+      input(ng-model="req.url.href", maxlength=200, name="base_url", type="text")
     div.field
       label
         HTTP方法:
@@ -26,7 +26,7 @@ block content
         div.field
           div.ui.radio.checkbox
             - verbatim
-              <input type="radio" id="{{ idForMethod(method) }}" name="method" ng-model="methods.selected" ng-value="method">
+              <input type="radio" id="{{ idForMethod(method) }}" name="method" ng-model="req.method" ng-value="method">
               <label for="{{ idForMethod(method) }}">{{ method }}</label>
     div.field
       label
@@ -54,7 +54,7 @@ block content
               i.icon.remove
       div.ui.blue.icon.button(ng-click="add(query)")
         i.icon.add
-    div.field(ng-show="methods.selected == 'POST'")
+    div.field(ng-show="req.methods == 'POST'")
       label
         | Body:
       textarea(name="body")
@@ -68,12 +68,9 @@ block javascript
     angular.module('myApp', ['ngCookies']).controller('CollectionController',
       ['$scope', '$http', '$cookies', function($scope, $http, $cookies) {
         $http.defaults.headers.post['X-CSRFToken'] = $cookies.csrftoken;
-        $scope.location = document.createElement('a');
-        $scope.base_url = window.location;
         $scope.query = [{'name': '', 'value': ''}];
         $scope.headers = [{'name': '', 'value': ''}];
         $scope.methods = ['GET', 'POST', 'PUT'];
-        $scope.methods.selected = 'GET';
         $scope.requests = [];
 
         $scope.add = function(list) {
@@ -88,26 +85,18 @@ block javascript
           return 'method-' + method;
         }
 
-        $scope.$watch(
-          function() {
-            return $scope.base_url + JSON.stringify($scope.query);
-          }, function () {
-              var validParams = $scope.query.filter(function(i) {
-                return !!i.name;
-              });
-              $scope.location.href = $scope.base_url;
-              $scope.location.search = $.param(validParams);
-          });
         var fetchRequests = function() {
           $http({method: 'GET', url: "{% url 'collection_requests' object.id %}"})
           .success(function(data, status, headers, config) {
             if (data.meta.status == 'OK') {
               for (var i=0; i<data.data.length; i++) {
-                var uri = data.data[i].uri,
-                    location = document.createElement('a');
-                location.href = uri;
+                var req = data.data[i];
                 $scope.requests.push({
-                  'location': location
+                  'pk': req.pk,
+                  'url': new URL(req.url),
+                  'method': req.method,
+                  'headers': req.headers,
+                  'body': req.body
                 })
               }
             }

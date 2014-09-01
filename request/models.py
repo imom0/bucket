@@ -23,14 +23,14 @@ class Request(models.Model):
     def __unicode__(self):
         return u'{method} {protocol}://{host}{path}'.format(**self.__dict__)
 
+    def as_url(self):
+        return u'{protocol}://{host}{path}?{query_params}'.format(**self.__dict__)
+
     def as_dict(self):
         return {
             'pk': self.pk,
-            'protocol': self.protocol,
-            'host': self.host,
-            'path': self.path,
+            'url': self.as_url(),
             'method': self.method,
             'headers': self.headers,
-            'query_params': self.query_params,
             'body': self.body,
         }
