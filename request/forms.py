@@ -12,5 +12,5 @@ class RequestForm(ModelForm):
 
     class Meta:
         model = Request
-        fields = ('protocol', 'host', 'path',
-                  'method', 'headers', 'query_params', 'body')
+        fields = ('scheme', 'netloc', 'path',
+                  'method', 'headers', 'query', 'body')

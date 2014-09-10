@@ -94,7 +94,12 @@ block javascript
         }
 
         $scope.updateRequests = function() {
-          $http({method: 'POST', url: "{% url 'collection_requests' object.id %}"})
+          $http({
+            method: 'POST',
+            url: "{% url 'collection_requests' object.id %}",
+            headers: {'Content-Type': 'application/json'},
+            data: JSON.stringify({requests: $scope.requests})
+          })
           .success(function(data, status, headers, config) {
             alert('update success');
           })
