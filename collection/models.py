@@ -13,3 +13,6 @@ class Collection(models.Model):
     updated_at = models.DateTimeField(u'更新时间', auto_now=True)
 
     unique_together = ('created_by_id', 'name')
+
+    def __unicode__(self):
+        return u'#{id}:{name}'.format(**self.__dict__)

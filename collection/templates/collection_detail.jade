@@ -10,54 +10,42 @@ block content
   p= object.description
   p= object.created_at|date
 
-  div(ng-controller="CollectionController", ng-repeat="req in requests").ui.fluid.form.segment
-    h3.ui.header
-      请求
-      - verbatim
-        {{ req.url.protocol }}//{{ req.url.host }}{{ req.url.pathname }}{{ req.url.search }}
-    div.field
-      label
-        地址:
-      input(ng-model="req.url.href", maxlength=200, name="base_url", type="text")
-    div.field
-      label
-        HTTP方法:
-      div.grouped.inline.fields(ng-repeat="method in methods")
-        div.field
-          div.ui.radio.checkbox
-            - verbatim
-              <input type="radio" id="{{ idForMethod(method) }}" name="method" ng-model="req.method" ng-value="method">
-              <label for="{{ idForMethod(method) }}">{{ method }}</label>
-    div.field
-      label
-        HTTP头:
-      div(ng-repeat="param in headers").three.fields
+  div(ng-controller="CollectionController")
+    div(ng-repeat="req in requests").ui.fluid.form.segment
+      h3.ui.header
+        请求
+        - verbatim
+          {{ req.url.protocol }}//{{ req.url.host }}{{ req.url.pathname }}{{ req.url.search }}
+      div.field
+        label
+          地址:
+        input(ng-model="req.url.href", maxlength=200, name="base_url", type="text")
+      div.field
+        label
+          HTTP方法:
+        div.grouped.inline.fields(ng-repeat="method in methods")
           div.field
-            input(ng-model="param.name", type="text")
-          div.field
-            input(ng-model="param.value", type="text")
-          div.field
-            div.ui.red.icon.button(ng-click="remove(headers, $index)")
-              i.icon.remove
-      div.ui.blue.icon.button(ng-click="add(headers)")
-        i.icon.add
-    div.field
-      label
-        Query Params:
-      div(ng-repeat="param in query").three.fields
-          div.field
-            input(ng-model="param.name", type="text")
-          div.field
-            input(ng-model="param.value", type="text")
-          div.field
-            div.ui.red.icon.button(ng-click="remove(query, $index)")
-              i.icon.remove
-      div.ui.blue.icon.button(ng-click="add(query)")
-        i.icon.add
-    div.field(ng-show="req.methods == 'POST'")
-      label
-        | Body:
-      textarea(name="body")
+            div.ui.radio.checkbox
+              - verbatim
+                <input type="radio" id="{{ idForMethod(method, req) }}" name="req-{{ req.pk }}-method" ng-model="req.method" ng-value="method">
+                <label for="{{ idForMethod(method, req) }}">{{ method }}</label>
+      div.field
+        label
+          HTTP头:
+        div(ng-repeat="param in headers").three.fields
+            div.field
+              input(ng-model="param.name", type="text")
+            div.field
+              input(ng-model="param.value", type="text")
+            div.field
+              div.ui.red.icon.button(ng-click="remove(headers, $index)")
+                i.icon.remove
+        div.ui.blue.icon.button(ng-click="add(headers)")
+          i.icon.add
+      div.field(ng-show="['DELETE', 'PUT', 'POST'].indexOf(req.method) >= 0")
+        label
+          | Body:
+        textarea(name="body")
     div.ui.divider
     div.center.aligned.column
       div.right.floated.green.ui.labeled.icon.button(ng-click="updateRequests()")
@@ -68,7 +56,6 @@ block javascript
     angular.module('myApp', ['ngCookies']).controller('CollectionController',
       ['$scope', '$http', '$cookies', function($scope, $http, $cookies) {
         $http.defaults.headers.post['X-CSRFToken'] = $cookies.csrftoken;
-        $scope.query = [{'name': '', 'value': ''}];
         $scope.headers = [{'name': '', 'value': ''}];
         $scope.methods = ['GET', 'POST', 'PUT'];
         $scope.requests = [];
@@ -81,8 +68,8 @@ block javascript
           list.splice(index, 1);
         }
 
-        $scope.idForMethod = function(method) {
-          return 'method-' + method;
+        $scope.idForMethod = function(method, req) {
+          return 'method-' + method + '-' + req.pk;
         }
 
         var fetchRequests = function() {
@@ -115,7 +102,6 @@ block javascript
             alert('update fail');
           })
         }
-
         fetchRequests();
       }
     ]);
